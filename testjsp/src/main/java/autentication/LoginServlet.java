@@ -11,7 +11,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import service.UserService;
-import singleton.DatabaseManagerSingleton;
 
 /**
  * Servlet implementation class LoginServlet
@@ -50,6 +49,7 @@ public class LoginServlet extends HttpServlet {
 		try {
 			if(UserService.getInstance().login(email, password)) {
 				request.getSession().setAttribute("userLoggedEmail", email);
+				request.setAttribute("loginMessage","Utente correttamente collegato");
 				logger.debug("Setto l attribute userLoggedEmail : " + (String) request.getSession().getAttribute("userLoggedEmail"));
 				request.getRequestDispatcher("users.jsp").forward(request,response);
 			}else {

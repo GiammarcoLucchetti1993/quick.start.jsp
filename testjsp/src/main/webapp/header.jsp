@@ -10,7 +10,7 @@ body {
 .topnav {
   overflow: hidden;
   background-color: #333;
-  padding-left:618px;
+  padding-left:550px;
 }
 
 .topnav a {
@@ -44,15 +44,16 @@ if(session.getAttribute("userLoggedEmail")==null){
 	utente = "LOGGATO COME :";
 	utenteLoggato = "" + session.getAttribute("userLoggedEmail");
 }
-// String utenteLoggato = "" + session.getAttribute("userLoggedEmail");
-
 %>   
+
 
 <div class="topnav">
   <a href="./users.jsp">Lista Utente</a>
   <a href="./insertUser.jsp">Inserisci Utente</a>
-  <a href="./updateUser.jsp">Modifica Utente</a>
+  <a href="./roles.jsp">Lista Ruoli</a>
+  <a href="./insertRole.jsp">Inserisci Ruoli</a>
   <a href="./LogoutServlet">Log Out</a>
 </div> 
-  <h2 style="margin-left:780px;"><%= utente%> <%= utenteLoggato%></h2>
+  <h2 style="margin-left:780px;color:white;"><%= utente%> <%= utenteLoggato%></h2>
+
     

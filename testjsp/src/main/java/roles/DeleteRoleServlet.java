@@ -1,10 +1,11 @@
-package users;
+package roles;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import service.RoleService;
 import service.UserService;
 
 import java.io.IOException;
@@ -18,15 +19,15 @@ import autentication.LogoutServlet;
 /**
  * Servlet implementation class DeleteUserService
  */
-@WebServlet("/DeleteUserServlet")
-public class DeleteUserServlet extends HttpServlet {
+@WebServlet("/DeleteRoleServlet")
+public class DeleteRoleServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private final static Logger logger = LoggerFactory.getLogger(DeleteUserServlet.class);
+	private final static Logger logger = LoggerFactory.getLogger(DeleteRoleServlet.class);
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public DeleteUserServlet() {
+    public DeleteRoleServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -44,7 +45,7 @@ public class DeleteUserServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String idSelected = request.getParameter("selectedUserId");
+		String idSelected = request.getParameter("selectedRoleId");
 		int id = Integer.parseInt(idSelected);
 		boolean result = false;
 //		try {
@@ -55,25 +56,25 @@ public class DeleteUserServlet extends HttpServlet {
 //		}
 		
 		try {
-			result = deleteRowUsers(id);
+			result = deleteRowRole(id);
 			logger.debug("result = "+result);
 		} catch (ClassNotFoundException | SQLException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if(result == true) {
-			request.setAttribute("deleteUser","OK");
-			request.getRequestDispatcher("users.jsp").forward(request,response);
+			request.setAttribute("deleteRole","OK");
+			request.getRequestDispatcher("roles.jsp").forward(request,response);
 		}else {
-			request.setAttribute("deleteUser","KO");
-			request.getRequestDispatcher("users.jsp").forward(request,response);
+			request.setAttribute("deleteRole","KO");
+			request.getRequestDispatcher("roles.jsp").forward(request,response);
 		}
 		
 		//request.getRequestDispatcher("users.jsp").forward(request,response);
 	}
 	
-	private boolean deleteRowUsers(int id) throws ClassNotFoundException, SQLException, IOException {
-		boolean value =UserService.getInstance().deleteUser(id);
+	private boolean deleteRowRole(int id) throws ClassNotFoundException, SQLException, IOException {
+		boolean value =RoleService.getInstance().deleteRole(id);
 		return value;
 	}
 

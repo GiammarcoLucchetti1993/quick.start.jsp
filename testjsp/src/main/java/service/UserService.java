@@ -12,13 +12,19 @@ import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-import pojo.User;
-import singleton.DatabaseManagerSingleton;
-import singleton.PropertiesManagerSingleton;
+import org.proxima.common.mail.MailUtility;
+import org.slf4j.LoggerFactory;
+
+import autentication.LoginServlet;
+import ch.qos.logback.classic.Logger;
+import proxima.informatica.academy.DatabaseManagerSingleton;
+import proxima.informatica.academy.dto.RoleDto;
+import proxima.informatica.academy.dto.UserDto;
 
 public class UserService {
 
 	private static UserService instance;
+	private final static org.slf4j.Logger logger = LoggerFactory.getLogger(UserService.class);
 
 	private UserService() {
 	}
@@ -32,29 +38,55 @@ public class UserService {
 
 	public boolean login(String email, String password) {
 		boolean responseValue = false;
-		User userRetrieved;
+		UserDto userRetrieved;
 		try {
 			userRetrieved = DatabaseManagerSingleton.getInstance().getUser(email, password);
 			responseValue = userRetrieved != null;
-		} catch (ClassNotFoundException | IOException | SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return responseValue;
 	}
 
-	public boolean insert(User userToInsert) throws ClassNotFoundException, SQLException, IOException {
-		boolean responseValue = DatabaseManagerSingleton.getInstance().insertTableUsers(userToInsert);
+	public boolean insertUser(UserDto userToInsert) throws ClassNotFoundException, SQLException, IOException {
+		boolean responseValue = false; 
+		int rowChange = DatabaseManagerSingleton.getInstance().insertUser(userToInsert);
+		String email = userToInsert.getEmail();
+		logger.debug(email);
+		String objectEmail = "Conferma Registrazione";
+		String message="<p>Clicca su questo link per completare la registrazione </p><br/>"
+				+ "<a href = http://localhost:8080/testjsp/completeRegistration.jsp";
+		if(rowChange>0)
+		{
+			try {
+			MailUtility.sendSimpleMail(email,objectEmail,message);
+			}catch(Exception e) {
+				//e.printStackTrace();
+			}
+			responseValue = true;
+		}
 		return responseValue;
 	}
 
-	public ArrayList<User> selectAllUsers() throws ParseException, IOException, ClassNotFoundException, SQLException {
-		ArrayList<User> users = new ArrayList<User>();
+	public ArrayList<UserDto> selectAllUsers() throws ParseException, IOException, ClassNotFoundException, SQLException {
+		ArrayList<UserDto> users = new ArrayList<UserDto>();
 		users = DatabaseManagerSingleton.getInstance().selectAllUsers();
 		return users;
 	}
 	
 	public boolean deleteUser(int id) throws ClassNotFoundException, SQLException, IOException {
 		boolean value = DatabaseManagerSingleton.getInstance().deleteRowUsers(id);
+		return value;
+	}
+	
+	public UserDto selectUserById(int id) throws ParseException, IOException, ClassNotFoundException, SQLException {
+		UserDto users = new UserDto();
+		users = DatabaseManagerSingleton.getInstance().selectByUserId(id);
+		return users;
+	}
+	
+	public int updateUser(int id,UserDto userUpdate) {
+		int value = DatabaseManagerSingleton.getInstance().updateUser(id, userUpdate);
 		return value;
 	}
 

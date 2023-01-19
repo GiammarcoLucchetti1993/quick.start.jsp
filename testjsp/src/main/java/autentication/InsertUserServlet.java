@@ -24,15 +24,15 @@ import service.UserService;
 /**
  * Servlet implementation class LoginServlet
  */
-@WebServlet("/RegistrationServlet")
-public class RegistrationServlet extends HttpServlet {
+@WebServlet("/InsertUserServlet")
+public class InsertUserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private final static Logger logger = LoggerFactory.getLogger(RegistrationServlet.class);
+	private final static Logger logger = LoggerFactory.getLogger(InsertUserServlet.class);
 
 	/**
 	 * Default constructor.
 	 */
-	public RegistrationServlet() {
+	public InsertUserServlet() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -57,7 +57,7 @@ public class RegistrationServlet extends HttpServlet {
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		String email = request.getParameter("email_input");
-//		String password = request.getParameter("password_input");
+		String password = request.getParameter("password_input");
 		String firstName = request.getParameter("firstname_input");
 		String lastName = request.getParameter("lastname_input");
 		String birthDate = request.getParameter("birthdate_input");
@@ -67,7 +67,7 @@ public class RegistrationServlet extends HttpServlet {
 		
 		try {
 			//rowsUpdate = insertNewUser(email,password,firstName,lastName,birthDate);
-			value = insertNewUsers(email,firstName,lastName,birthDate);
+			value = insertNewUsers(email,password,firstName,lastName,birthDate);
 		} catch (ClassNotFoundException | SQLException | IOException | ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -75,10 +75,9 @@ public class RegistrationServlet extends HttpServlet {
 		
 		try {
 			if (value == true) {
-				request.getRequestDispatcher("login.jsp").forward(request, response);
-				logger.debug("Ho inserito l utente");
+				request.getRequestDispatcher("users.jsp").forward(request, response);
 			} else {
-				request.getRequestDispatcher("registration.html").forward(request, response);
+				request.getRequestDispatcher("insertUser.jsp").forward(request, response);
 			}
 		} catch (IOException | ServletException e) {
 			// TODO Auto-generated catch block
@@ -86,7 +85,7 @@ public class RegistrationServlet extends HttpServlet {
 		}
 	}
 
-	private boolean insertNewUsers(String email, String firstName, String lastName,
+	private boolean insertNewUsers(String email, String password, String firstName, String lastName,
 			String birthDate)
 					throws ClassNotFoundException, SQLException, IOException, ParseException {
 		boolean value = false;
@@ -94,9 +93,8 @@ public class RegistrationServlet extends HttpServlet {
 		Timestamp userInsertedTime = Timestamp.valueOf(LocalDateTime.now());
 		Date date = Date.valueOf(birthDate);
 		int role = 10;
-//		int roleInsert = Integer.parseInt(role);
 		userToInsert.setEmail(email);
-//		userToInsert.setPassword(password);
+		userToInsert.setPassword(password);
 		userToInsert.setFirstName(firstName);
 		userToInsert.setLastName(lastName);
 		userToInsert.setDateOfBirth(date);
@@ -106,24 +104,4 @@ public class RegistrationServlet extends HttpServlet {
 		
 		return value;
 	}
-//	private int insertNewUser(String email, String password, String firstName, String lastName,
-//			String birthDate)
-//			throws ClassNotFoundException, SQLException, IOException, ParseException {
-//		
-//		User userToInsert = new User();
-//		Timestamp userInsertedTime = Timestamp.valueOf(LocalDateTime.now());
-//		Date date = Date.valueOf(birthDate);
-//		int role = 10;
-////		int roleInsert = Integer.parseInt(role);
-//		userToInsert.setEmail(email);
-//		userToInsert.setPassword(password);
-//		userToInsert.setFirstName(firstName);
-//		userToInsert.setLastName(lastName);
-//		userToInsert.setDateOfBirth(date);
-//		userToInsert.setRegDate(userInsertedTime);
-//		userToInsert.setRole(role);
-//		int rowsUpdate = DatabaseManagerSingleton.getInstance().insertTableUsers(userToInsert);
-//		return rowsUpdate;
-//	}
-	
 }
