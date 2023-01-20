@@ -52,16 +52,20 @@ public class UserService {
 		boolean responseValue = false; 
 		int rowChange = DatabaseManagerSingleton.getInstance().insertUser(userToInsert);
 		String email = userToInsert.getEmail();
-		logger.debug(email);
+		//int id = userToInsert.getId();
+//		request.setAttribute("id",id);
+		logger.debug(""+id);
 		String objectEmail = "Conferma Registrazione";
 		String message="<p>Clicca su questo link per completare la registrazione </p><br/>"
 				+ "<a href = http://localhost:8080/testjsp/completeRegistration.jsp";
+		logger.debug("" + rowChange);
 		if(rowChange>0)
 		{
 			try {
 			MailUtility.sendSimpleMail(email,objectEmail,message);
 			}catch(Exception e) {
-				//e.printStackTrace();
+				e.printStackTrace();
+				//logger.error(e.getMessage(),e);
 			}
 			responseValue = true;
 		}
